@@ -47,6 +47,6 @@ mod tests {
 
     #[test]
     fn is_negative_number_negative() {
-        assert_eq!(extract_sign!(0b1111101101011100001010001111011u32), 1);
+        assert_eq!(extract_sign!(0b10111101101011100001010001111011u32), 1);
     }
 }
