@@ -1,0 +1,6 @@
+[package]
+name = "sfloat"
+version = "0.1.0"
+authors = ["Joe <joe@crimsonhexagon.us>"]
+
+[dependencies]
