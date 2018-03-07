@@ -16,7 +16,7 @@ macro_rules! extract_sign {
 
 macro_rules! extract_exponent {
     ($single: expr) => ({
-        (($single >> 23) & 0xFF) - 127
+        (($single >> 23) & 0xFFu32) - 127u32
     });
 }
 
