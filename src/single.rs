@@ -41,7 +41,7 @@ pub fn fpsub(x: Single, y: Single) -> Single {
 #[cfg(test)]
 mod tests {
     use super::Single;
-    
+
     #[test]
     fn create_float_macro() {
         assert_eq!(from_f32!(0.085f32), 0x3DAE147B);
@@ -60,5 +60,15 @@ mod tests {
     #[test]
     fn is_negative_number_negative() {
         assert_eq!(extract_sign!(0xBDAE147B), 1);
+    }
+
+    #[test]
+    fn is_exponent_0x7b() {
+        assert_eq!(extract_exponent!(0x3DAE147B), 0x7B);
+    }
+
+    #[test]
+    fn is_mantissa_0x2e147b() {
+        assert_eq!(extract_mantissa!(0x3DAE147B), 0x2E147B);
     }
 }
