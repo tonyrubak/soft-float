@@ -16,7 +16,7 @@ macro_rules! extract_sign {
 
 macro_rules! extract_exponent {
     ($single: expr) => ({
-        (($single >> 23) & 0xFF) - 127
+        ((($single >> 23) & 0xFF) as i32 - 127)
     });
 }
 
@@ -31,7 +31,61 @@ pub fn from_f32(float: &f32) -> Single {
 }
 
 pub fn fpadd(x: Single, y: Single) -> Single {
-    0
+    let (mut l_sign, mut l_exp, mut l_mant) = (extract_sign!(x), extract_exponent!(x), extract_mantissa!(x));
+    let (mut r_sign, mut r_exp, mut r_mant) = (extract_sign!(y), extract_exponent!(y), extract_mantissa!(y));
+
+    // We might should check to see if our floating point values are bad here, but we won't... yet
+
+    // If exponents are not equal, denormalize value with the smaller exponent
+
+    let mut d_sign: u32;
+    let mut d_exp: i32;
+    let mut d_mant: u32;
+
+    if (r_exp > l_exp) {
+        l_mant = shift_and_round(l_mant, (r_exp - l_exp) as usize);
+        d_exp = r_exp;
+    } else if (l_exp > r_exp) {
+        r_mant = shift_and_round(r_mant, (l_exp - r_exp) as usize);
+        d_exp = l_exp;
+    } else { d_exp = r_exp; }
+    
+    // If signs are the same we are adding, otherwise we are subtracting
+
+    if l_sign ^ r_sign == 1 {
+        // Signs are opposite, so let's subtract the larger one from the smaller
+        if (l_mant > r_mant) {
+            d_mant = l_mant - r_mant;
+            d_sign = l_sign;
+        } else {
+            d_mant = r_mant - l_mant;
+            d_sign = r_sign;
+        }
+    } else {
+        // Signs are the same, so we'll add the values
+        d_mant = r_mant + l_mant;
+        d_sign = l_sign;
+    }
+
+    // Check for overflow or normalize the result
+    if d_mant >= 0x1000000 {
+        // We overflowed, so squeeze the result back into 24 bits and round
+        d_mant = shift_and_round(d_mant, 1);
+        d_exp += 1;
+    } else {
+        // Normalize the result (HO bit should be 1)
+        if (d_mant != 0) {
+            while d_mant < 0x800000 && d_exp > -127 {
+                d_mant = d_mant << 1;
+                d_exp -= 1;
+            }
+        } else {
+            d_sign = 0; // we'll always return +0 instead of -0
+            d_exp = 0;
+        }
+    }
+
+    pack_single(d_sign, d_exp, d_mant)
 }
 
 pub fn fpsub(x: Single, y: Single) -> Single {
@@ -140,5 +194,25 @@ mod tests {
     #[test]
     fn is_packed_single_0x3DAE147B() {
         assert_eq!(super::pack_single(0, -4, 0xAE147B), 0x3DAE147B);
+    }
+    
+    #[test]
+    fn is_result_of_addition_0x3F8AE148() {
+        assert_eq!(super::fpadd(from_f32!(1f32),from_f32!(0.085f32)), 0x3F8AE148);
+    }
+
+    #[test]
+    fn is_result_of_addition_0xBFAE148() {
+        assert_eq!(super::fpadd(from_f32!(-1f32),from_f32!(-0.085f32)), 0xBF8AE148);
+    }
+
+    #[test]
+    fn is_result_of_addition_0xBF6A3D71() {
+        assert_eq!(super::fpadd(from_f32!(-1f32),from_f32!(0.085f32)), 0xBF6A3D71);
+    }
+
+    #[test]
+    fn is_result_of_addition_0x3F6A3D71() {
+        assert_eq!(super::fpadd(from_f32!(1f32),from_f32!(-0.085f32)), 0x3F6A3D71);
     }
 }
