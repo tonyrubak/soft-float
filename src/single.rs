@@ -68,7 +68,7 @@ mod tests {
     }
 
     #[test]
-    fn is_mantissa_0x2e147b() {
-        assert_eq!(extract_mantissa!(0x3DAE147B), 0x2E147Bu32);
+    fn is_mantissa_0xae147b() {
+        assert_eq!(extract_mantissa!(0x3DAE147B), 0xAE147Bu32);
     }
 }
