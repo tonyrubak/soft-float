@@ -44,17 +44,17 @@ mod tests {
     
     #[test]
     fn create_float_macro() {
-        assert_eq!(from_f32!(0.085f32), 0x3DEA147B);
+        assert_eq!(from_f32!(0.085f32), 0x3DAE147B);
     }
     
     #[test]
     fn create_float() {
-        assert_eq!(super::from_f32(&0.085f32), 0x3DEA147B);
+        assert_eq!(super::from_f32(&0.085f32), 0x3DAE147B);
     }
 
     #[test]
     fn is_positive_number_positive() {
-        assert_eq!(extract_sign!(0x3DEA147B), 0);
+        assert_eq!(extract_sign!(0x3DAE147B), 0);
     }
 
     #[test]
