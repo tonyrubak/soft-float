@@ -22,7 +22,7 @@ macro_rules! extract_exponent {
 
 macro_rules! extract_mantissa {
     ($single: expr) => ({
-        if $single & 0x7FFFFFFF == 0 { 0 } else { $single & 0x8000000 }
+        if $single & 0x7FFFFFFF == 0 { 0 } else { $single & 0x7FFFFF | 0x800000 }
     });
 }
 
