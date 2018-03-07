@@ -84,7 +84,7 @@ fn shift_and_round(mantissa: u32, n: usize) -> u32 {
 
 fn pack_single(sign: u32, exponent: i32, mantissa: u32) -> u32 {
     (sign << 31) |
-    (((exponent + 127) << 23) as u32) |
+    ((exponent + 127) << 23) as u32 |
     (mantissa & 0x7FFFFF)
 }
 
