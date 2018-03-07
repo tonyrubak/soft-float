@@ -14,6 +14,18 @@ macro_rules! extract_sign {
     });
 }
 
+macro_rules! extract_exponent {
+    ($single: expr) => ({
+        (($single >> 23) & 0xFF) - 127
+    )};
+}
+
+macro_rules! extract_mantissa {
+    ($single: expr) => ({
+        if $single & 0x7FFFFFFF == 0 { 0 } else { $single & 0x8000000 }
+    )};
+}
+
 pub fn from_f32(float: &f32) -> Single {
     unsafe { * ((float as *const f32) as *const u32) }
 }
