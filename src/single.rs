@@ -16,7 +16,7 @@ macro_rules! extract_sign {
 
 macro_rules! extract_exponent {
     ($single: expr) => ({
-        (($single >> 23) & 0xFFu32) - 127u32
+        (($single >> 23) & 0xFF) - 127
     });
 }
 
@@ -63,8 +63,8 @@ mod tests {
     }
 
     #[test]
-    fn is_exponent_0x7b() {
-        assert_eq!(extract_exponent!(0x3DAE147B), 0x7Bu32);
+    fn is_exponent_neg_4() {
+        assert_eq!(extract_exponent!(0x3DAE147B), -4);
     }
 
     #[test]
