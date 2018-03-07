@@ -64,11 +64,11 @@ mod tests {
 
     #[test]
     fn is_exponent_0x7b() {
-        assert_eq!(extract_exponent!(0x3DAE147B), 0x7B);
+        assert_eq!(extract_exponent!(0x3DAE147B), 0x7Bu32);
     }
 
     #[test]
     fn is_mantissa_0x2e147b() {
-        assert_eq!(extract_mantissa!(0x3DAE147B), 0x2E147B);
+        assert_eq!(extract_mantissa!(0x3DAE147B), 0x2E147Bu32);
     }
 }
