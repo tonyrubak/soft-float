@@ -82,6 +82,12 @@ fn shift_and_round(mantissa: u32, n: usize) -> u32 {
     }
 }
 
+fn pack_single(sign: u32, exponent: i32, mantissa: u32) -> u32 {
+    (sign << 31) |
+    (((exponent + 127) << 23) as u32) |
+    (mantissa & 0x7FFFFF)
+}
+
 #[cfg(test)]
 mod tests {
     use super::Single;
@@ -129,5 +135,10 @@ mod tests {
     #[test]
     fn is_mantissa_truncated() {
         assert_eq!(super::shift_and_round(0x3DAE1473, 4), 0x3DAE147);
+    }
+
+    #[test]
+    fn is_packed_single_0x3DAE147B() {
+        assert_eq!(super::pack_single(0, -4, 0xAE147B), 0x3DAE147B);
     }
 }
