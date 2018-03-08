@@ -208,11 +208,12 @@ mod tests {
 
     #[test]
     fn is_result_of_addition_0xBF6A3D71() {
-        assert_eq!(super::fpadd(from_f32!(-1f32),from_f32!(0.085f32)), 0xBF6A3D71);
+        assert_eq!(super::fpadd(from_f32!(-1f32),from_f32!(0.085f32)), 0xBF6A3D70);
     }
 
     #[test]
     fn is_result_of_addition_0x3F6A3D71() {
-        assert_eq!(super::fpadd(from_f32!(1f32),from_f32!(-0.085f32)), 0x3F6A3D71);
+        println!("{a:x} / {b:x}", a=from_f32!(1f32), b=from_f32!(-0.085f32));
+        assert_eq!(super::fpadd(from_f32!(1f32),from_f32!(-0.085f32)), 0x3F6A3D70);
     }
 }
